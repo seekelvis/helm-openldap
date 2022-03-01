@@ -6,6 +6,7 @@ apiVersion: {{ include "ingress.apiVersion" . }}
 kind: Ingress
 metadata:
   name: {{ $fullName }}
+  namespace: {{ .Values.namespace }}
   labels:
     app: {{ template "phpldapadmin.name" . }}
     chart: {{ template "phpldapadmin.chart" . }}

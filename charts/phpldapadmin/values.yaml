@@ -11,6 +11,7 @@ env:
 
 ## Number of phpLDAPadmin images
 replicaCount: 1
+namespace: smldap
 
 ## Set default image, imageTag, and imagePullPolicy. mode is used to indicate the
 ##

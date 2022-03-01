@@ -6,7 +6,7 @@ metadata:
 {{ toYaml .Values.service.annotations | indent 4 }}
 {{- end }}
   name: {{ template "openldap.fullname" . }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Values.namespace }}
   labels:
     app: {{ template "openldap.fullname" . }}
     chart: {{ template "openldap.chart" . }}
@@ -16,7 +16,8 @@ metadata:
 {{ toYaml .Values.extraLabels | indent 4 }}
 {{- end }}
 spec:
-  type: {{ .Values.service.type }}
+  # type: {{ .Values.service.type }}
+  type: NodePort
   {{- if and (eq .Values.service.type "LoadBalancer") .Values.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.service.loadBalancerIP }}
   {{- end }}

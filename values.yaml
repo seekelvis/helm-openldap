@@ -2,7 +2,8 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 3
+namespace: smldap
+replicaCount: 2
 updateStrategy: {}
   # When a StatefulSet's .spec.updateStrategy.type is set to OnDelete, 
   # the StatefulSet controller will not automatically update the Pods
@@ -56,16 +57,16 @@ service:
   sslLdapPort: 636
 
   ## If service type NodePort, define the value here
-  #ldapPortNodePort:
-  #sslLdapPortNodePort:
+  ldapPortNodePort: 30389
+  sslLdapPortNodePort: 30636
   ## List of IP addresses at which the service is available
   ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
   ##
-  externalIPs: []
+#  externalIPs: []
 
   #loadBalancerIP: 
   #loadBalancerSourceRanges: []
-  type: ClusterIP
+  type: NodePort
   sessionAffinity: None
 
 # Additional volumes to be mounted to pod
@@ -111,8 +112,8 @@ env:
 # Default Passwords to use, stored as a secret.
 # You can override these at install time with
 # helm install openldap --set openldap.adminPassword=<passwd>,openldap.configPassword=<passwd>
-adminPassword: Not@SecurePassw0rd
-configPassword: Not@SecurePassw0rd
+adminPassword: admin
+configPassword: config
 
 # Custom openldap configuration files used to override default settings
 # customLdifFiles:
@@ -142,7 +143,7 @@ replication:
   tls_reqcert: "never"
 ## Persist data to a persistent volume
 persistence:
-  enabled: true
+  enabled: false
   ## database data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -150,11 +151,13 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  # storageClass: "standard-singlewriter"
-  # existingClaim: openldap-pvc
+#  storageClass: "standard-singlewriter"
+#  existingClaim: openldap-pvc
+#  annotations :
+#    - volume.beta.kubernetes.io/storage-class: "managed-nfs-storage"
   accessModes:
     - ReadWriteOnce
-  size: 8Gi
+  size: 1Gi
 
 ## Configure extra options for liveness, readiness, and startup probes
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
@@ -200,7 +203,7 @@ test:
     repository: dduportal/bats
     tag: 0.4.0
 ltb-passwd:
-  enabled : true
+  enabled : false
   ingress:
     enabled: true
     annotations: {}
@@ -217,7 +220,7 @@ ltb-passwd:
     bindPWKey: LDAP_ADMIN_PASSWORD
 
 phpldapadmin:
-  enabled: true
+  enabled: false
   ingress:
     enabled: true
     annotations: {}

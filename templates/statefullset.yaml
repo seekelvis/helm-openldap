@@ -2,6 +2,7 @@ apiVersion: {{ template "statefulset.apiVersion" . }}
 kind: StatefulSet
 metadata:
   name:  {{ template "openldap.fullname" . }}
+  namespace: {{ .Values.namespace }}
   labels:
     app: {{ template "openldap.fullname" . }}
     chart: {{ template "openldap.chart" . }}
@@ -23,6 +24,7 @@ spec:
   serviceName: {{ template "openldap.fullname" . }}-headless
   template:
     metadata:
+      namespace: {{ .Values.namespace }}
       annotations:
         checksum/configmap-env: {{ include (print $.Template.BasePath "/configmap-env.yaml") . | sha256sum }}
 {{- if .Values.customLdifFiles}}
@@ -73,12 +75,10 @@ spec:
             - secretRef:
                 name: {{ template "openldap.secretName" . }}
           volumeMounts:
-            - name: data
+            - name: ldap-data
               mountPath: /var/lib/ldap
-              subPath: data
-            - name: data
+            - name: ldap-config
               mountPath: /etc/ldap/slapd.d
-              subPath: config-data
             {{- if .Values.extraVolumeMounts }}
             {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
             {{- end }}
@@ -86,7 +86,7 @@ spec:
             - name: certs
               mountPath: "/container/service/slapd/assets/certs"
 {{- else }}
-            - name: data
+            - name: ldap-certs
               mountPath: /container/service/slapd/assets/certs
 {{- end }}
 {{- if .Values.customLdifFiles }}
@@ -205,6 +205,7 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: data
+        namespace: smldap
         annotations:
         {{- range $key, $value := .Values.persistence.annotations }}
           {{ $key }}: {{ $value }}
@@ -226,6 +227,17 @@ spec:
 {{- end }}
 {{- end }}
 {{- else }}
-        - name: data
-          emptyDir: {}
+#        - name: data
+##          emptyDir: {}
+#          hostPath:
+#            path: "/data/helmLdap"
+        - name: ldap-data
+          hostPath:
+            path: "/data/ldap/db"
+        - name: ldap-config
+          hostPath:
+            path: "/data/ldap/config"
+        - name: ldap-certs
+          hostPath:
+            path: "/data/ldap/certs"
 {{- end }}

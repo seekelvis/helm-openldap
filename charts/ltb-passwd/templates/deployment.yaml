@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "ltb-passwd.fullname" . }}
+  namespace: {{ .Values.namespace }}
   labels:
 {{ include "ltb-passwd.labels" . | indent 4 }}
 spec:
@@ -12,6 +13,7 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
+      namespace: {{ .Values.namespace }}
       labels:
         app.kubernetes.io/name: {{ include "ltb-passwd.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}

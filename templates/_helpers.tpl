@@ -52,7 +52,7 @@ Generate replication services list
 */}}
 {{- define "replicalist" -}}
 {{- $name := (include "openldap.fullname" .) }}
-{{- $namespace := .Release.Namespace }}
+{{- $namespace := .Values.namespace }}
 {{- $cluster := .Values.replication.clusterName }}
 {{- $nodeCount := .Values.replicaCount | int }}
   {{- range $index0 := until $nodeCount -}}

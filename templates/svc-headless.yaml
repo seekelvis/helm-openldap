@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ template "openldap.fullname" . }}-headless
+  namespace: {{ .Values.namespace }}
   labels:
     app: {{ template "openldap.fullname" . }}
     chart: {{ template "openldap.chart" . }}

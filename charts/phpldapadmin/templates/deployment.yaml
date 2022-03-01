@@ -3,6 +3,7 @@ kind: Deployment
 
 metadata:
   name: {{ template "phpldapadmin.fullname" . }}
+  namespace: {{ .Values.namespace }}
   labels:
     app: {{ template "phpldapadmin.name" . }}
     chart: {{ template "phpldapadmin.chart" . }}
@@ -17,6 +18,7 @@ spec:
       release: {{ .Release.Name }}
   template:
     metadata:
+      namespace: {{ .Values.namespace }}
       labels:
         app: {{ template "phpldapadmin.name" . }}
         release: {{ .Release.Name }}

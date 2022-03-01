@@ -2,6 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: openldap-qualif-
+  namespace: smldap
 spec:
   entrypoint: test-deployment
   arguments:
