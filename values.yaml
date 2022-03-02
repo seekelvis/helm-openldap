@@ -3,6 +3,7 @@
 # Declare variables to be passed into your templates.
 
 namespace: smldap
+podAntiAffinity: false
 replicaCount: 2
 updateStrategy: {}
   # When a StatefulSet's .spec.updateStrategy.type is set to OnDelete, 
@@ -62,11 +63,12 @@ service:
   ## List of IP addresses at which the service is available
   ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
   ##
-#  externalIPs: []
+#  externalIPs: ["10.210.16.148"]
 
-  #loadBalancerIP: 
+#  loadBalancerIP: "10.210.16.148"
   #loadBalancerSourceRanges: []
-  type: NodePort
+#  type: ClusterIP | NodePort | LoadBalancer
+  type: LoadBalancer
   sessionAffinity: None
 
 # Additional volumes to be mounted to pod
@@ -85,9 +87,9 @@ extraVolumeMounts:
 # Use the env variables from https://github.com/osixia/docker-openldap#beginner-guide
 env:
  LDAP_LOG_LEVEL: "256"
- LDAP_ORGANISATION: "Example Inc."
- LDAP_DOMAIN: "example.org"
- LDAP_READONLY_USER: "false"
+ LDAP_ORGANISATION: "smartmore"
+ LDAP_DOMAIN: "smartmore.com"
+ LDAP_READONLY_USER: "true"
  LDAP_READONLY_USER_USERNAME: "readonly"
  LDAP_READONLY_USER_PASSWORD: "readonly"
  LDAP_RFC2307BIS_SCHEMA: "false"
@@ -112,8 +114,8 @@ env:
 # Default Passwords to use, stored as a secret.
 # You can override these at install time with
 # helm install openldap --set openldap.adminPassword=<passwd>,openldap.configPassword=<passwd>
-adminPassword: admin
-configPassword: config
+adminPassword: admin2021
+configPassword: config2021
 
 # Custom openldap configuration files used to override default settings
 # customLdifFiles:
@@ -214,9 +216,9 @@ ltb-passwd:
     - "ssl-ldap2.example"
   ldap:
     server: ldap://openldap-openldap-stack-ha
-    searchBase: dc=example,dc=org
+    searchBase: dc=smartmore,dc=com
     # existingSecret: openldaptest
-    bindDN: cn=admin,dc=example,dc=org
+    bindDN: cn=admin,dc=smartmore,dc=com
     bindPWKey: LDAP_ADMIN_PASSWORD
 
 phpldapadmin:

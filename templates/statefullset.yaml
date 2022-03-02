@@ -155,6 +155,7 @@ spec:
       nodeSelector:
 {{ toYaml . | indent 8 }}
     {{- end }}
+      {{- if .Values.podAntiAffinity }}
       affinity: 
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -163,6 +164,7 @@ spec:
               matchLabels:
                 app: {{ template "openldap.fullname" . }}
                 release: {{ .Release.Name }}
+      {{- end }}
     {{- with .Values.tolerations }}
       tolerations:
 {{ toYaml . | indent 8 }}

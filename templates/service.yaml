@@ -16,8 +16,7 @@ metadata:
 {{ toYaml .Values.extraLabels | indent 4 }}
 {{- end }}
 spec:
-  # type: {{ .Values.service.type }}
-  type: NodePort
+  type: {{ .Values.service.type }}
   {{- if and (eq .Values.service.type "LoadBalancer") .Values.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.service.loadBalancerIP }}
   {{- end }}
@@ -47,3 +46,8 @@ spec:
   selector:
     app: {{ template "openldap.fullname" . }}
     release: {{ .Release.Name }}
+#  externalIPs:
+#    - 10.181.2.114
+#  { { - if and (eq .Values.service.type "LoadBalancer") .Values.service.loadBalancerSourceRanges } }
+#  externalIPs: { { toYaml .Values.service.externalIPs | nindent 4 } }
+#  { { - end } }
