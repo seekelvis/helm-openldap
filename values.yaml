@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 namespace: smldap
-podAntiAffinity: false
+podAntiAffinity: true
 replicaCount: 2
 updateStrategy: {}
   # When a StatefulSet's .spec.updateStrategy.type is set to OnDelete, 
@@ -63,7 +63,9 @@ service:
   ## List of IP addresses at which the service is available
   ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
   ##
-#  externalIPs: ["10.210.16.148"]
+  # externalIPs didn't work
+#  externalIPs:
+#    - 10.210.16.148
 
 #  loadBalancerIP: "10.210.16.148"
   #loadBalancerSourceRanges: []
@@ -89,7 +91,7 @@ env:
  LDAP_LOG_LEVEL: "256"
  LDAP_ORGANISATION: "smartmore"
  LDAP_DOMAIN: "smartmore.com"
- LDAP_READONLY_USER: "true"
+ LDAP_READONLY_USER: "false"
  LDAP_READONLY_USER_USERNAME: "readonly"
  LDAP_READONLY_USER_PASSWORD: "readonly"
  LDAP_RFC2307BIS_SCHEMA: "false"
@@ -146,6 +148,11 @@ replication:
 ## Persist data to a persistent volume
 persistence:
   enabled: false
+  ##  if enabled is false, you need to define 3 path:
+  ldapData: "/data/ldap/db"
+  ldapConfig: "/data/ldap/config"
+  ldapCerts: "/data/ldap/certs"
+  ##  else:
   ## database data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning

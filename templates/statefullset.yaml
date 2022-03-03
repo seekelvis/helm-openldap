@@ -229,17 +229,13 @@ spec:
 {{- end }}
 {{- end }}
 {{- else }}
-#        - name: data
-##          emptyDir: {}
-#          hostPath:
-#            path: "/data/helmLdap"
         - name: ldap-data
           hostPath:
-            path: "/data/ldap/db"
+            path: {{ .Values.persistence.ldapData }}
         - name: ldap-config
           hostPath:
-            path: "/data/ldap/config"
+            path: {{ .Values.persistence.ldapConfig }}
         - name: ldap-certs
           hostPath:
-            path: "/data/ldap/certs"
+            path: {{ .Values.persistence.ldapCerts }}
 {{- end }}
